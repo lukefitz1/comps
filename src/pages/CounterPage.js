@@ -4,11 +4,37 @@ import Button from "../components/Button";
 import Panel from "../components/Panel";
 // import useCounter from "../hooks/use-counter";
 
+const INCREMENT_COUNT = "increment";
+const SET_VALUE_TO_ADD = "set-value-to-add";
+const DECREMENT_COUNT = "decrement";
+const SET_COUNT = "set-count";
+
 const reducer = (state, action) => {
-  return {
-    ...state,
-    count: state.count + 1,
-  };
+  switch (action.type) {
+    case INCREMENT_COUNT:
+      return {
+        ...state,
+        count: state.count + 1,
+      };
+    case DECREMENT_COUNT:
+      return {
+        ...state,
+        count: state.count - 1,
+      };
+    case SET_VALUE_TO_ADD:
+      return {
+        ...state,
+        valueToAdd: action.payload,
+      };
+    case SET_COUNT:
+      return {
+        ...state,
+        count: state.count + state.valueToAdd,
+        valueToAdd: 0,
+      };
+    default:
+      return state;
+  }
 };
 
 function CounterPage({ initialCount }) {
@@ -22,16 +48,26 @@ function CounterPage({ initialCount }) {
 
   const increment = () => {
     // setCount(count + 1);
-    dispatch();
+    dispatch({
+      type: INCREMENT_COUNT,
+    });
   };
 
   const decrement = () => {
     // setCount(count - 1);
+    dispatch({
+      type: DECREMENT_COUNT,
+    });
   };
 
   const handleChange = (event) => {
     const value = parseInt(event.target.value) || 0;
     // setValueToAdd(value);
+
+    dispatch({
+      type: SET_VALUE_TO_ADD,
+      payload: value,
+    });
   };
 
   const handleSubmit = (event) => {
@@ -39,6 +75,9 @@ function CounterPage({ initialCount }) {
 
     // setCount(count + valueToAdd);
     // setValueToAdd(0);
+    dispatch({
+      type: SET_COUNT,
+    });
   };
 
   return (
